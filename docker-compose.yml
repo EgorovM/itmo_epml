@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: epml-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+      - jupyter-data:/root/.jupyter
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    working_dir: /app
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
+
+volumes:
+  jupyter-data:
