@@ -161,9 +161,6 @@ models/
 *.ipynb
 
 # Reports
-*.png
-*.jpg
-*.pdf
 !reports/figures/.gitkeep
 
 # Logs
