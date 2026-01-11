@@ -139,4 +139,16 @@ pipeline-all: ## Run pipeline for all models
 pipeline-validate: ## Validate configuration
 	python -c "from src.pipeline.validate_config import validate_config, compose_configs; cfg = compose_configs(); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
 
+clearml-setup: ## Setup ClearML configuration
+	python -c "from src.clearml_utils.setup import get_clearml_config; import json; print(json.dumps(get_clearml_config(), indent=2))"
+
+clearml-experiments: ## Run experiments with ClearML
+	python src/clearml_utils/run_experiments.py
+
+clearml-compare: ## Compare ClearML experiments
+	python src/clearml_utils/compare_experiments.py
+
+clearml-train: ## Train single model with ClearML
+	python src/clearml_utils/train_with_clearml.py
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test
