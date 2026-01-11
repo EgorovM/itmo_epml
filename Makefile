@@ -127,4 +127,16 @@ mlflow-ui-db: ## Start MLflow UI with SQLite database
 reset-mlflow-db: ## Reset MLflow database (fix migration errors)
 	python scripts/reset_mlflow_db.py
 
+pipeline-run: ## Run complete pipeline with Hydra
+	python src/pipeline/run_pipeline.py
+
+pipeline-train: ## Train model with specific config (usage: make pipeline-train MODEL=random_forest)
+	python src/pipeline/train_with_config.py model=$(MODEL)
+
+pipeline-all: ## Run pipeline for all models
+	python src/pipeline/run_all_models.py
+
+pipeline-validate: ## Validate configuration
+	python -c "from src.pipeline.validate_config import validate_config, compose_configs; cfg = compose_configs(); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test

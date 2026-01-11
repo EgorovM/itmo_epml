@@ -1,0 +1,5 @@
+# KNN configuration
+_target_: sklearn.neighbors.KNeighborsClassifier
+n_neighbors: 5
+weights: uniform
+algorithm: KNN

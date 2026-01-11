@@ -37,25 +37,27 @@ def filter_experiments(
         # Note: MLflow filter syntax doesn't support OR easily, so we'll filter in Python
         filter_string = f"metrics.accuracy >= {min_accuracy}"
 
-    runs = client.search_runs(
-        experiment_ids=[experiment.experiment_id],
-        filter_string=filter_string,
-        order_by=["metrics.accuracy DESC"],
-        max_results=max_results * 2,  # Get more to filter by algorithm
+    runs_list = list(
+        client.search_runs(
+            experiment_ids=[experiment.experiment_id],
+            filter_string=filter_string,
+            order_by=["metrics.accuracy DESC"],
+            max_results=max_results * 2,  # Get more to filter by algorithm
+        )
     )
 
     # Filter by algorithm if specified
     if algorithm:
-        runs = [
+        runs_list = [
             run
-            for run in runs
+            for run in runs_list
             if (
                 run.data.params.get("algorithm") == algorithm
                 or run.data.tags.get("algorithm") == algorithm
             )
         ]
 
-    runs = runs[:max_results]  # Limit results
+    runs = runs_list[:max_results]  # Limit results
 
     print(f"\n🔍 Found {len(runs)} experiments matching criteria:")
     print(f"   Min accuracy: {min_accuracy}")
@@ -77,6 +79,9 @@ def filter_experiments(
 
 def main():
     """Main function to compare experiments."""
+    import json
+    from pathlib import Path
+
     tracking_uri = "sqlite:///mlflow.db"
     experiment_name = "iris-classification"
 
@@ -102,6 +107,20 @@ def main():
     print("\n4️⃣ Filtered Experiments (RandomForest only):")
     filter_experiments(experiment_name, tracking_uri, algorithm="RandomForest")
 
+    # Save comparison results
+    metrics_dir = Path("metrics")
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+    comparison_file = metrics_dir / "comparison_results.json"
+
+    comparison_data = {
+        "summary": summary,
+        "timestamp": __import__("datetime").datetime.now().isoformat(),
+    }
+
+    with open(comparison_file, "w") as f:
+        json.dump(comparison_data, f, indent=2)
+
+    print(f"\n✅ Comparison results saved to {comparison_file}")
     print("\n" + "=" * 80)
 
 

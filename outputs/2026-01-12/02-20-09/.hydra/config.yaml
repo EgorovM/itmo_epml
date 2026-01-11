@@ -1,0 +1,40 @@
+model:
+  _target_: sklearn.svm.SVC
+  kernel: rbf
+  C: 1.0
+  gamma: scale
+  random_state: 42
+  probability: true
+  algorithm: SVM
+data:
+  dataset: iris
+  features:
+  - sepal length (cm)
+  - sepal width (cm)
+  - petal length (cm)
+  - petal width (cm)
+  target: target
+  target_names:
+  - setosa
+  - versicolor
+  - virginica
+project:
+  name: epml
+  version: 0.1.0
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  models: models
+  metrics: metrics
+  reports: reports
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: iris-classification
+train:
+  test_size: 0.2
+  random_state: 42
+  cv_folds: 5
+monitoring:
+  enabled: true
+  log_file: logs/pipeline.log
+  notify_on_completion: true

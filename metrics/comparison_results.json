@@ -1,0 +1,317 @@
+{
+  "summary": {
+    "total_runs": 44,
+    "best_accuracy": 1.0,
+    "runs": [
+      {
+        "run_id": "94336cd13fdd4c7c8691fd3701a85ef6",
+        "run_name": "RandomForest_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "55e132eb93ce41a0bb26524fc430aeff",
+        "run_name": "KNN_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "KNN"
+      },
+      {
+        "run_id": "ffec1fa5ae334908a6068b7c04e54e94",
+        "run_name": "LogisticRegression_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "LogisticRegression"
+      },
+      {
+        "run_id": "64348b319bc44a0590a789bf443b0805",
+        "run_name": "SVM_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM"
+      },
+      {
+        "run_id": "a37b2752658048018c290894a33b8494",
+        "run_name": "RandomForest_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "1a1b0c0d56ac4a4d84d82fbea5a0aafb",
+        "run_name": "RandomForest_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "2e22b41bac754cdd85176b214af869df",
+        "run_name": "SVM_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM"
+      },
+      {
+        "run_id": "28bc40850753441dabaf316d4a9f0b42",
+        "run_name": "RandomForest_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "46c530d921bd4ff68e2733d50455ad64",
+        "run_name": "Voting",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "Voting"
+      },
+      {
+        "run_id": "d47881228bc244cb8b85cae5a642ff75",
+        "run_name": "MLP",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "MLP"
+      },
+      {
+        "run_id": "a2dbdc774dcf470aa058bce643b9e75e",
+        "run_name": "GradientBoosting",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "GradientBoosting"
+      },
+      {
+        "run_id": "a0fd9c0393da4d42b99805a6266dd7a5",
+        "run_name": "NaiveBayes",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "NaiveBayes"
+      },
+      {
+        "run_id": "bc04edec846741a8b904583ee4cf3328",
+        "run_name": "KNN_5",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "KNN_5"
+      },
+      {
+        "run_id": "ea6dd04dc9804228882e7f644741a35b",
+        "run_name": "KNN_3",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "KNN_3"
+      },
+      {
+        "run_id": "db4497d5ce9c4ac9aaa48fbbd3046b42",
+        "run_name": "SVM_poly",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM_poly"
+      },
+      {
+        "run_id": "ac3811dab7ed4c639e5e30286481f79c",
+        "run_name": "SVM_rbf",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM_rbf"
+      },
+      {
+        "run_id": "5b88702895784db7b042c6a50512d298",
+        "run_name": "SVM_linear",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM_linear"
+      },
+      {
+        "run_id": "1fb9e837ef1e48b98d8b4824b29cc615",
+        "run_name": "DecisionTree_pruned",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "DecisionTree_pruned"
+      },
+      {
+        "run_id": "3b49d0a759bd4faa8780eea181b16f63",
+        "run_name": "DecisionTree",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "DecisionTree"
+      },
+      {
+        "run_id": "93257beae5bb454699643d3ec2571bce",
+        "run_name": "RandomForest_deep",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest_deep"
+      },
+      {
+        "run_id": "cdc25420eb6846de83f119cb87cba73c",
+        "run_name": "RandomForest_200",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest_200"
+      },
+      {
+        "run_id": "f28be6966d0b4a259eb0fddd177e297d",
+        "run_name": "RandomForest",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "7d1256239cfb4afc8393f4adcd0a46fb",
+        "run_name": "LogisticRegression",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "LogisticRegression"
+      },
+      {
+        "run_id": "b2cdd7aee2904b30aad34716ea383f6b",
+        "run_name": "Voting",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "Voting"
+      },
+      {
+        "run_id": "6fdc6ff1c83546b0a79fab953f489ec6",
+        "run_name": "MLP",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "MLP"
+      },
+      {
+        "run_id": "08a69812e1af49039a00ea15e4a3c0f7",
+        "run_name": "GradientBoosting",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "GradientBoosting"
+      },
+      {
+        "run_id": "07a5f16a4c9a48968ae5d60cce59ce9d",
+        "run_name": "NaiveBayes",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "NaiveBayes"
+      },
+      {
+        "run_id": "31e63070d708405fa82c8a19647634a5",
+        "run_name": "KNN_5",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "KNN_5"
+      },
+      {
+        "run_id": "d6dde30192d44b788553a14d87db8042",
+        "run_name": "KNN_3",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "KNN_3"
+      },
+      {
+        "run_id": "c2d19d4a52974fe5b6dc4e71030b5e12",
+        "run_name": "SVM_poly",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM_poly"
+      },
+      {
+        "run_id": "de499e2bd63a4636b4bfb45fff8beed0",
+        "run_name": "SVM_rbf",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM_rbf"
+      },
+      {
+        "run_id": "3355b519c3984d119318dfeb58d62ae9",
+        "run_name": "SVM_linear",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM_linear"
+      },
+      {
+        "run_id": "5a7f078f2b154cac93c46f3386fe0763",
+        "run_name": "DecisionTree_pruned",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "DecisionTree_pruned"
+      },
+      {
+        "run_id": "248c962f23b6400f87643d2a95319864",
+        "run_name": "DecisionTree",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "DecisionTree"
+      },
+      {
+        "run_id": "ef7a4e3d9e6a4983bc41c20ee90c4550",
+        "run_name": "RandomForest_deep",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest_deep"
+      },
+      {
+        "run_id": "ca8d0b5603b943929372bada13d002b3",
+        "run_name": "RandomForest_200",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest_200"
+      },
+      {
+        "run_id": "76d4406b7b134c10a0274cfcab92a90b",
+        "run_name": "RandomForest",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "2353cc8515dd44319625f823e2d48c94",
+        "run_name": "LogisticRegression",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "LogisticRegression"
+      },
+      {
+        "run_id": "0c46210bee4041939c3f7aa358ad099f",
+        "run_name": "KNN_7",
+        "status": "FINISHED",
+        "accuracy": 0.9666666666666667,
+        "algorithm": "KNN_7"
+      },
+      {
+        "run_id": "2f882ada8fb44252a544d0104d83e2b7",
+        "run_name": "KNN_7",
+        "status": "FINISHED",
+        "accuracy": 0.9666666666666667,
+        "algorithm": "KNN_7"
+      },
+      {
+        "run_id": "4e73a22abe0f461aba88658749aba2f6",
+        "run_name": "AdaBoost",
+        "status": "FINISHED",
+        "accuracy": 0.9333333333333333,
+        "algorithm": "AdaBoost"
+      },
+      {
+        "run_id": "a583f097beae482188da8ae7b8c71e38",
+        "run_name": "AdaBoost",
+        "status": "FINISHED",
+        "accuracy": 0.9333333333333333,
+        "algorithm": "AdaBoost"
+      },
+      {
+        "run_id": "adf8942f561a4de395ffd5ef2d32bf73",
+        "run_name": "SGD",
+        "status": "FINISHED",
+        "accuracy": 0.5666666666666667,
+        "algorithm": "SGD"
+      },
+      {
+        "run_id": "18644b3430a6417dbf1afcda7e033b44",
+        "run_name": "SGD",
+        "status": "FINISHED",
+        "accuracy": 0.5666666666666667,
+        "algorithm": "SGD"
+      }
+    ]
+  },
+  "timestamp": "2026-01-12T02:21:12.130058"
+}
