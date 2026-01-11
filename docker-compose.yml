@@ -8,6 +8,7 @@ services:
     container_name: epml-jupyter
     ports:
       - "8888:8888"
+      - "5000:5000"
     volumes:
       - .:/app
       - jupyter-data:/root/.jupyter
@@ -16,5 +17,19 @@ services:
     working_dir: /app
     command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
 
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: epml-mlflow
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/app
+      - mlflow-data:/app/mlruns
+    working_dir: /app
+    command: mlflow ui --host 0.0.0.0 --port 5000
+
 volumes:
   jupyter-data:
+  mlflow-data:

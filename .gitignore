@@ -175,6 +175,18 @@ Thumbs.db
 .uv/
 uv.lock
 
+# DVC
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+*.dvc
+
+# MLflow
+mlruns/
+mlartifacts/
+mlflow.db
+mlflow.db-journal
+
 # Docker
 .dockerignore
 
@@ -185,3 +197,5 @@ bandit-report.json
 *.tmp
 *.bak
 *.swp
+
+clearml.conf

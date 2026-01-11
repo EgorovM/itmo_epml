@@ -1,0 +1,12 @@
+# Iris dataset configuration
+dataset: iris
+features:
+  - sepal length (cm)
+  - sepal width (cm)
+  - petal length (cm)
+  - petal width (cm)
+target: target
+target_names:
+  - setosa
+  - versicolor
+  - virginica

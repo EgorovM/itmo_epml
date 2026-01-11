@@ -1,0 +1,8 @@
+# SVM configuration
+_target_: sklearn.svm.SVC
+kernel: rbf
+C: 1.0
+gamma: scale
+random_state: 42
+probability: true
+algorithm: SVM

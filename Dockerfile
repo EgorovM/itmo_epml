@@ -25,10 +25,10 @@ RUN uv pip install --system -e ".[dev]"
 COPY . .
 
 # Create necessary directories
-RUN mkdir -p data/raw data/processed data/external models reports/figures logs notebooks
+RUN mkdir -p data/raw data/processed data/external models reports/figures logs notebooks metrics plots params mlruns metrics plots params mlruns
 
-# Expose Jupyter port
-EXPOSE 8888
+# Expose Jupyter and MLflow ports
+EXPOSE 8888 5000
 
 # Default command
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]

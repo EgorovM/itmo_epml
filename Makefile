@@ -88,4 +88,91 @@ requirements: ## Generate requirements.txt from pyproject.toml
 	$(UV) pip compile pyproject.toml -o requirements.txt
 	$(UV) pip compile pyproject.toml --extra dev -o requirements-dev.txt
 
+dvc-init: ## Initialize DVC
+	$(UV) run dvc init --no-scm
+
+dvc-add-data: ## Add data to DVC tracking
+	dvc add data/raw/iris.csv || echo "Data file may not exist, creating example..."
+	@mkdir -p data/raw
+	@touch data/raw/iris.csv || true
+
+dvc-repro: ## Reproduce DVC pipeline
+	dvc repro
+
+dvc-push: ## Push data to remote storage
+	dvc push
+
+dvc-pull: ## Pull data from remote storage
+	dvc pull
+
+mlflow-ui: ## Start MLflow UI
+	mlflow ui --host 0.0.0.0 --port 5000
+
+mlflow-compare: ## Compare model versions
+	python src/models/compare_models.py
+
+train-pipeline: ## Run full training pipeline (prepare data + train)
+	python src/data/prepare_data.py
+	python src/models/train_with_mlflow.py
+
+run-experiments: ## Run all ML experiments
+	python src/experiments/run_experiments.py
+
+compare-experiments: ## Compare and filter experiments
+	python src/experiments/compare_experiments.py
+
+mlflow-ui-db: ## Start MLflow UI with SQLite database
+	mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
+
+reset-mlflow-db: ## Reset MLflow database (fix migration errors)
+	python scripts/reset_mlflow_db.py
+
+pipeline-run: ## Run complete pipeline with Hydra
+	python src/pipeline/run_pipeline.py
+
+pipeline-train: ## Train model with specific config (usage: make pipeline-train MODEL=random_forest)
+	python src/pipeline/train_with_config.py model=$(MODEL)
+
+pipeline-all: ## Run pipeline for all models
+	python src/pipeline/run_all_models.py
+
+pipeline-validate: ## Validate configuration
+	python -c "from src.pipeline.validate_config import validate_config, compose_configs; cfg = compose_configs(); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
+
+clearml-setup: ## Setup ClearML configuration
+	python -c "from src.clearml_utils.setup import get_clearml_config; import json; print(json.dumps(get_clearml_config(), indent=2))"
+
+clearml-experiments: ## Run experiments with ClearML
+	python src/clearml_utils/run_experiments.py
+
+clearml-compare: ## Compare ClearML experiments
+	python src/clearml_utils/compare_experiments.py
+
+clearml-train: ## Train single model with ClearML
+	python src/clearml_utils/train_with_clearml.py
+
+clearml-pipeline-tasks: ## Create properly configured tasks for pipeline
+	python scripts/create_pipeline_tasks.py
+
+clearml-pipeline: ## Create and run ClearML pipeline
+	python scripts/run_clearml_pipeline.py
+
+clearml-pipeline-auto: ## Automatically create, run, and monitor ClearML pipeline
+	python scripts/run_clearml_pipeline_auto.py --monitor --wait
+
+clearml-pipeline-monitor: ## Monitor ClearML pipeline (usage: make clearml-pipeline-monitor PIPELINE_ID=xxx)
+	python -c "from src.clearml_utils.pipeline_monitor import ClearMLPipelineMonitor; import sys; monitor = ClearMLPipelineMonitor(); result = monitor.monitor_pipeline('$(PIPELINE_ID)', check_interval=10); print(f'Status: {result}')"
+
+clearml-agent-init: ## Initialize ClearML agent (first time setup)
+	clearml-agent init
+
+clearml-agent-start: ## Start ClearML agent for default queue
+	@echo "Starting ClearML agent for queue 'default'..."
+	@echo "Press Ctrl+C to stop"
+	clearml-agent daemon --queue default
+
+clearml-agent-stop: ## Stop ClearML agent
+	@echo "Stopping ClearML agent..."
+	@pkill -f "clearml-agent" || echo "No agent process found"
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test
