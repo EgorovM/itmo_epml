@@ -28,9 +28,6 @@ dependencies = [
 - [ClearML Server](deployment/clearml.md) - настройка ClearML
 - [CI/CD](deployment/cicd.md) - автоматизация
 
-**Скриншот руководства:**
-![Deployment guide](figures/deployment_guide.png)
-
 ### Автоматическая генерация документации
 
 Настроена автоматическая генерация через GitHub Actions:
@@ -41,9 +38,6 @@ dependencies = [
   run: mkdocs build
 ```
 
-**Скриншот workflow:**
-![GitHub Actions](figures/github_actions.png)
-
 ### Примеры использования
 
 Созданы примеры в документации:
@@ -52,10 +46,7 @@ dependencies = [
 - [Configuration](getting-started/configuration.md) - настройка
 - [API Examples](api/mlflow-utils.md) - примеры API
 
-**Скриншот примеров:**
-![Usage examples](figures/usage_examples.png)
-
-## Публикация в Git Pages (3 балла)
+## Публикация в Git Pages
 
 ### Настройка GitHub Actions
 
@@ -66,13 +57,13 @@ dependencies = [
 - Использование официальных actions
 
 **Скриншот workflow:**
-![GitHub Actions workflow](figures/github_actions_workflow.png)
+![GitHub Actions workflow](figures/github_actions.png)
 
 ### Сайт с документацией
 
 Документация доступна на GitHub Pages:
 
-- URL: `https://your-username.github.io/epml`
+- URL: `https://egorovm.github.io/epml`
 - Автоматическое обновление при изменениях
 
 **Скриншот сайта:**
@@ -86,10 +77,7 @@ Workflow автоматически:
 2. Публикует на GitHub Pages
 3. Обновляет сайт
 
-**Скриншот автоматического обновления:**
-![Auto update](figures/auto_update.png)
-
-## Отчеты об экспериментах (2 балла)
+## Отчеты об экспериментах
 
 ### Отчеты в формате Markdown
 
@@ -101,9 +89,6 @@ make report-generate
 # Или
 python src/reports/generate_experiment_report.py
 ```
-
-**Скриншот генерации:**
-![Report generation](figures/report_generation.png)
 
 ### Графики и визуализации
 
@@ -136,34 +121,7 @@ python src/reports/generate_experiment_report.py
 - В формате Markdown
 - С графиками и таблицами
 
-**Скриншот автоматической генерации:**
-![Auto report](figures/auto_report.png)
-
-## Воспроизводимость (1 балл)
-
-### Инструкции по воспроизведению
-
-Создан файл `REPRODUCIBILITY.md` с полными инструкциями:
-
-1. Установка зависимостей
-2. Инициализация DVC
-3. Запуск экспериментов
-4. Проверка результатов
-
-**Скриншот инструкций:**
-![Reproducibility](figures/reproducibility.png)
-
-### README с полным описанием
-
-Обновлен `README.md` с:
-
-- Описанием проекта
-- Быстрым стартом
-- Структурой проекта
-- Инструкциями по использованию
-
-**Скриншот README:**
-![README](figures/readme.png)
+Пример: https://egorovm.github.io/itmo_epml/reports/experiment_report/
 
 ### Автоматическая сборка документации
 
@@ -211,9 +169,6 @@ docs/
     └── code-style.md
 ```
 
-**Скриншот структуры:**
-![Docs structure](figures/docs_structure.png)
-
 ## Команды для работы
 
 ### Документация
@@ -236,16 +191,6 @@ make docs-deploy
 # Сгенерировать отчет об экспериментах
 make report-generate
 ```
-
-## Результаты
-
-✅ MkDocs настроен и работает
-✅ Создана полная техническая документация
-✅ Настроен GitHub Actions для публикации
-✅ Создана система генерации отчетов
-✅ Добавлены графики и визуализации
-✅ Созданы инструкции по воспроизведению
-✅ Обновлен README с полным описанием
 
 ## Заключение
 
