@@ -158,3 +158,61 @@ uv pip install package-name
 ```bash
 make requirements
 ```
+
+## 🔧 Настройка Git
+
+Проект включает `.gitignore` для ML проектов, который исключает:
+- Python кэш файлы
+- Виртуальные окружения
+- Данные и модели
+- Jupyter notebook outputs
+- Логи и отчеты
+
+## 🌿 Git Workflow
+
+### Стратегия ветвления
+
+Проект использует Git Flow для организации работы:
+
+```
+main          # Основная ветка (production-ready код)
+├── develop   # Ветка разработки (интеграция функций)
+├── feature/* # Ветки для новых функций
+├── bugfix/*  # Ветки для исправления багов
+└── experiment/* # Ветки для экспериментов с моделями
+```
+
+### Описание веток
+
+- **main** - стабильная версия проекта, готовая к демонстрации
+- **develop** - ветка для интеграции новых функций перед релизом
+- **feature/*** - разработка новых функций (например, `feature/new-model`)
+- **bugfix/*** - исправление ошибок (например, `bugfix/fix-data-loading`)
+- **experiment/*** - эксперименты с моделями и данными (например, `experiment/iris-svm`)
+
+### Workflow
+
+1. **Создание feature ветки:**
+   ```bash
+   git checkout develop
+   git checkout -b feature/new-feature
+   ```
+
+2. **Разработка и коммиты:**
+   ```bash
+   git add .
+   git commit -m "feat: add new feature"
+   ```
+
+3. **Слияние в develop:**
+   ```bash
+   git checkout develop
+   git merge feature/new-feature
+   ```
+
+4. **Релиз в main:**
+   ```bash
+   git checkout main
+   git merge develop
+   git tag -a v1.0.0 -m "Release version 1.0.0"
+   ```

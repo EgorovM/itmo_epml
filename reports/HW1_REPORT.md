@@ -64,6 +64,16 @@ pre-commit install
 **Скриншот выполнения make check:**
 ![Make check](figures/make_check.png)
 
+## Git workflow
+
+Настроен Git репозиторий с `.gitignore` для ML проектов. Стратегия ветвления описана в README.md.
+
+**Скриншот структуры веток:**
+![Git branches](figures/git_branches.png)
+
+**Скриншот .gitignore:**
+![Gitignore](figures/gitignore.png)
+
 ## Команды для воспроизведения
 
 ```bash
