@@ -88,4 +88,31 @@ requirements: ## Generate requirements.txt from pyproject.toml
 	$(UV) pip compile pyproject.toml -o requirements.txt
 	$(UV) pip compile pyproject.toml --extra dev -o requirements-dev.txt
 
+dvc-init: ## Initialize DVC
+	$(UV) run dvc init --no-scm
+
+dvc-add-data: ## Add data to DVC tracking
+	dvc add data/raw/iris.csv || echo "Data file may not exist, creating example..."
+	@mkdir -p data/raw
+	@touch data/raw/iris.csv || true
+
+dvc-repro: ## Reproduce DVC pipeline
+	dvc repro
+
+dvc-push: ## Push data to remote storage
+	dvc push
+
+dvc-pull: ## Pull data from remote storage
+	dvc pull
+
+mlflow-ui: ## Start MLflow UI
+	mlflow ui --host 0.0.0.0 --port 5000
+
+mlflow-compare: ## Compare model versions
+	python src/models/compare_models.py
+
+train-pipeline: ## Run full training pipeline (prepare data + train)
+	python src/data/prepare_data.py
+	python src/models/train_with_mlflow.py
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test

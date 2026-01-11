@@ -175,6 +175,16 @@ Thumbs.db
 .uv/
 uv.lock
 
+# DVC
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+*.dvc
+
+# MLflow
+mlruns/
+mlartifacts/
+
 # Docker
 .dockerignore
 
