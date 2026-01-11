@@ -139,6 +139,7 @@ pipeline-all: ## Run pipeline for all models
 pipeline-validate: ## Validate configuration
 	python -c "from src.pipeline.validate_config import validate_config, compose_configs; cfg = compose_configs(); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
 
+<<<<<<< HEAD
 clearml-setup: ## Setup ClearML configuration
 	python -c "from src.clearml_utils.setup import get_clearml_config; import json; print(json.dumps(get_clearml_config(), indent=2))"
 
@@ -174,5 +175,18 @@ clearml-agent-start: ## Start ClearML agent for default queue
 clearml-agent-stop: ## Stop ClearML agent
 	@echo "Stopping ClearML agent..."
 	@pkill -f "clearml-agent" || echo "No agent process found"
+=======
+docs-build: ## Build documentation with MkDocs
+	mkdocs build
+
+docs-serve: ## Serve documentation locally
+	mkdocs serve
+
+docs-deploy: ## Deploy documentation (requires GitHub Pages setup)
+	mkdocs gh-deploy
+
+report-generate: ## Generate experiment report
+	python src/reports/generate_experiment_report.py
+>>>>>>> cc51570 ([feat] test autodoc ci/cd)
 
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test
