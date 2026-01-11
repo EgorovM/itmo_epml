@@ -151,4 +151,25 @@ clearml-compare: ## Compare ClearML experiments
 clearml-train: ## Train single model with ClearML
 	python src/clearml_utils/train_with_clearml.py
 
+clearml-pipeline: ## Create and run ClearML pipeline
+	python scripts/run_clearml_pipeline.py
+
+clearml-pipeline-auto: ## Automatically create, run, and monitor ClearML pipeline
+	python scripts/run_clearml_pipeline_auto.py --monitor --wait
+
+clearml-pipeline-monitor: ## Monitor ClearML pipeline (usage: make clearml-pipeline-monitor PIPELINE_ID=xxx)
+	python -c "from src.clearml_utils.pipeline_monitor import ClearMLPipelineMonitor; import sys; monitor = ClearMLPipelineMonitor(); result = monitor.monitor_pipeline('$(PIPELINE_ID)', check_interval=10); print(f'Status: {result}')"
+
+clearml-agent-init: ## Initialize ClearML agent (first time setup)
+	clearml-agent init
+
+clearml-agent-start: ## Start ClearML agent for default queue
+	@echo "Starting ClearML agent for queue 'default'..."
+	@echo "Press Ctrl+C to stop"
+	clearml-agent daemon --queue default
+
+clearml-agent-stop: ## Stop ClearML agent
+	@echo "Stopping ClearML agent..."
+	@pkill -f "clearml-agent" || echo "No agent process found"
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test

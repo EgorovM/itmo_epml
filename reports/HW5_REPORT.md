@@ -88,9 +88,8 @@ task = setup_clearml(
 **Первоначальная настройка:**
 
 1. После запуска сервисов через `make clearml-up`, откройте браузер и перейдите на `http://localhost:8080`
-2. При первом запуске будет предложено создать административную учетную запись
-3. **Логин по умолчанию:** `admin`
-4. **Пароль по умолчанию:** `admin`
+2. **Логин по умолчанию:** `admin`
+3. **Пароль по умолчанию:** `admin`
 
 **Настройка API ключей:**
 
@@ -105,22 +104,7 @@ export CLEARML_API_ACCESS_KEY="your_access_key"
 export CLEARML_API_SECRET_KEY="your_secret_key"
 ```
 
-Или через файл конфигурации `~/.clearml/clearml.conf`:
-
-```conf
-api {
-    api_server: "http://localhost:8008"
-    web_server: "http://localhost:8080"
-    files_server: "http://localhost:8081"
-    access_key: "your_access_key"
-    secret_key: "your_secret_key"
-}
-```
-
-**Важно:**
-- Логин и пароль используются только для доступа к веб-интерфейсу
-- API ключи используются для трекинга экспериментов из кода
-- После настройки можно войти в UI по адресу `http://localhost:8080` и просматривать эксперименты, модели и пайплайны
+Или через файл конфигурации `./clearml.conf`:
 
 **Скриншот UI ClearML:**
 ![ClearML UI](figures/clearml_ui.png)
@@ -198,23 +182,6 @@ model = register_model(
 - Теги и категории
 - Связь с экспериментами
 
-**Скриншот метаданных:**
-![ClearML metadata](figures/clearml_metadata.png)
-
-### Автоматическое создание версий
-
-Каждая регистрация модели создает новую версию:
-
-```python
-versions = get_model_versions(
-    model_name="iris_classifier",
-    project_name="EPML",
-)
-```
-
-**Скриншот версий:**
-![ClearML versions](figures/clearml_versions.png)
-
 ### Система сравнения моделей
 
 Создана функция для сравнения версий моделей:
@@ -250,7 +217,17 @@ pipeline = create_training_pipeline(
 
 ### Автоматический запуск пайплайнов
 
-Пайплайны можно запускать автоматически:
+Пайплайны можно запускать автоматически через скрипт:
+
+```bash
+# Автоматический запуск с мониторингом
+make clearml-pipeline-auto
+
+# Или через Python
+python scripts/run_clearml_pipeline_auto.py --monitor --wait
+```
+
+Или программно:
 
 ```python
 pipeline_id = run_pipeline(
@@ -262,26 +239,122 @@ pipeline_id = run_pipeline(
 **Скриншот запуска:**
 ![ClearML pipeline run](figures/clearml_pipeline_run.png)
 
+### Настройка ClearML Agent
+
+Для выполнения пайплайнов требуется запущенный ClearML Agent, который обрабатывает задачи из очередей.
+
+**Установка агента:**
+
+```bash
+# Агент уже включен в зависимости проекта
+pip install clearml-agent
+```
+
+**Инициализация агента:**
+
+```bash
+# Первоначальная настройка (один раз)
+clearml-agent init
+```
+
+При инициализации потребуется указать:
+- ClearML Server URL: `http://localhost:8008`
+- API credentials (Access Key и Secret Key из UI)
+
+**Запуск агента:**
+
+```bash
+# Запустить агента для очереди 'default'
+make clearml-agent-start
+
+# Или напрямую
+clearml-agent daemon --queue default
+```
+
+**Остановка агента:**
+
+```bash
+# Остановить агента
+make clearml-agent-stop
+
+# Или найти процесс и остановить
+pkill -f "clearml-agent"
+```
+
+**Проверка статуса агента:**
+
+Агент можно проверить в UI ClearML:
+- Перейти в **Settings** → **Workers**
+- Должен отображаться активный воркер для очереди `default`
+
+**Скриншот агента:**
+![ClearML agent](figures/clearml_agent.png)
+
 ### Система мониторинга выполнения
 
-Создана функция мониторинга:
+Создан модуль `src/clearml_utils/pipeline_monitor.py` для мониторинга пайплайнов через ClearML API:
 
 ```python
-status = monitor_pipeline(pipeline_id)
+from src.clearml_utils.pipeline_monitor import ClearMLPipelineMonitor
+
+monitor = ClearMLPipelineMonitor()
+status = monitor.monitor_pipeline(
+    pipeline_id=pipeline_id,
+    check_interval=10,  # Проверка каждые 10 секунд через ClearML API
+    timeout=3600,       # Таймаут 1 час
+)
+```
+
+**Особенности мониторинга:**
+- Использует ClearML API для получения статуса пайплайна и его шагов
+- Прогресс логируется в ClearML task через `task.logger.report_text()`
+- Статус шагов получается через `PipelineController.from_task_id()`
+- Все данные доступны в ClearML UI, без локальных логов
+
+**Мониторинг через командную строку:**
+
+```bash
+# Мониторинг конкретного пайплайна
+make clearml-pipeline-monitor PIPELINE_ID=xxx
 ```
 
 **Скриншот мониторинга:**
 ![ClearML monitoring](figures/clearml_monitoring.png)
 
-### Уведомления
+### Уведомления о результатах
 
-ClearML поддерживает уведомления через:
-- Email
-- Slack
-- Webhooks
+Система автоматически отправляет уведомления в ClearML task:
 
-**Скриншот уведомлений:**
-![ClearML notifications](figures/clearml_notifications.png)
+```python
+from src.clearml_utils.pipeline_monitor import send_notification
+
+notification = send_notification(
+    pipeline_id=pipeline_id,
+    status="completed",
+    summary=summary,
+)
+```
+
+**Как работают уведомления:**
+- Уведомления отправляются в ClearML task через `task.logger.report_text()`
+- Добавляются в комментарий задачи через `task.set_comment()`
+- Добавляются теги для фильтрации: `monitored_completed`, `monitored_failed`
+- Все уведомления видны в ClearML UI в разделе "Log" и "Info" задачи
+
+**Пример уведомления в ClearML:**
+
+```
+✅ Pipeline COMPLETED
+
+Summary:
+- Duration: 120.5s
+- Steps: 3
+- Status: completed
+
+View at: http://localhost:8080/projects/EPML/experiments/xxx
+```
+
+Уведомления также можно сохранить локально (опционально) для резервного копирования.
 
 ## Структура проекта
 
@@ -295,15 +368,16 @@ epml/
 │   ├── train_with_clearml.py # Обучение с ClearML
 │   ├── run_experiments.py    # Запуск экспериментов
 │   ├── compare_experiments.py # Сравнение экспериментов
-│   └── pipeline.py           # Пайплайны
+│   ├── pipeline.py           # Пайплайны
+│   └── pipeline_monitor.py   # Мониторинг пайплайнов
+├── scripts/
+│   ├── run_clearml_pipeline.py      # Запуск пайплайнов
+│   └── run_clearml_pipeline_auto.py # Автоматический запуск
 ├── clearml.conf              # Конфигурация ClearML
 ├── docker-compose.clearml.yml # Docker Compose для ClearML Server
 └── reports/
     └── HW5_REPORT.md         # Отчет
 ```
-
-**Скриншот структуры:**
-![Project structure](figures/project_structure_hw5.png)
 
 ## Команды для работы
 
@@ -354,6 +428,19 @@ make clearml-compare
 
 ### Пайплайны
 
+```bash
+# Создать и запустить пайплайн
+make clearml-pipeline
+
+# Автоматический запуск с мониторингом
+make clearml-pipeline-auto
+
+# Мониторинг существующего пайплайна
+make clearml-pipeline-monitor PIPELINE_ID=xxx
+```
+
+Или программно:
+
 ```python
 from src.clearml_utils.pipeline import create_training_pipeline, run_pipeline
 
@@ -361,15 +448,17 @@ pipeline = create_training_pipeline()
 pipeline_id = run_pipeline(pipeline)
 ```
 
-## Результаты
+### ClearML Agent
 
-✅ ClearML установлен и настроен
-✅ Настроен трекинг экспериментов с автоматическим логированием
-✅ Создана система сравнения экспериментов
-✅ Настроено управление моделями (регистрация, версионирование)
-✅ Созданы ClearML пайплайны для ML workflow
-✅ Настроены мониторинг и уведомления
-✅ Создан отчет о проделанной работе
+```bash
+# Запустить агента для обработки очередей
+make clearml-agent-start
+
+# Остановить агента
+make clearml-agent-stop
+
+# Проверить статус (через UI или логи)
+```
 
 ## Заключение
 

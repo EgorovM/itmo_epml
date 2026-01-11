@@ -21,7 +21,7 @@ def log_parameters(params: dict[str, Any], task: Task | None = None):
 
 
 def log_metrics(metrics: dict[str, float], iteration: int = 0, task: Task | None = None):
-    """Log metrics to ClearML.
+    """Log metrics to ClearML as scalars.
 
     Args:
         metrics: Dictionary of metrics to log
@@ -33,11 +33,12 @@ def log_metrics(metrics: dict[str, float], iteration: int = 0, task: Task | None
         if task is None:
             raise ValueError("No ClearML task found. Call setup_clearml() first.")
 
+    # Log as scalars (automatically creates plots in ClearML UI)
     for metric_name, metric_value in metrics.items():
         task.logger.report_scalar(
             title="Metrics",
             series=metric_name,
-            value=metric_value,
+            value=float(metric_value),
             iteration=iteration,
         )
 
@@ -47,6 +48,8 @@ def log_model(
     model_name: str,
     tags: list[str] | None = None,
     task: Task | None = None,
+    metadata: dict[str, Any] | None = None,
+    model_object: Any = None,
 ) -> OutputModel:
     """Register model in ClearML.
 
@@ -55,6 +58,8 @@ def log_model(
         model_name: Name of the model
         tags: List of tags for the model
         task: ClearML task (if None, uses current task)
+        metadata: Dictionary of metadata to attach to the model
+        model_object: The actual sklearn model object (optional)
 
     Returns:
         ClearML OutputModel object
@@ -64,8 +69,39 @@ def log_model(
         if task is None:
             raise ValueError("No ClearML task found. Call setup_clearml() first.")
 
-    model = OutputModel(task=task, name=model_name, tags=tags or [])
+    # Combine tags with metadata tags
+    all_tags = list(tags or [])
+    if metadata:
+        for key, value in metadata.items():
+            all_tags.append(f"{key}={value}")
+
+    # Create OutputModel with framework specification
+    model = OutputModel(task=task, name=model_name, tags=all_tags, framework="scikit-learn")
+
+    # Update weights from file (ClearML automatically tracks the model)
     model.update_weights(model_path)
+
+    # Log model type and parameters as labels if model object provided
+    if model_object is not None:
+        try:
+            model_type = type(model_object).__name__
+            task.set_model_label("model_type", model_type)
+
+            if hasattr(model_object, "get_params"):
+                params = model_object.get_params()
+                for key, value in params.items():
+                    task.set_model_label(f"param_{key}", str(value))
+        except Exception:
+            pass
+
+    # Add metadata as model labels
+    if metadata:
+        for key, value in metadata.items():
+            try:
+                task.set_model_label(key, str(value))
+            except Exception:
+                pass
+
     return model
 
 

@@ -41,10 +41,16 @@ def register_model(
     # Update model with weights
     model.update_weights(model_path)
 
-    # Add metadata
+    # Add metadata as tags and labels
     if metadata:
-        for key, value in metadata.items():
-            model.metadata[key] = value
+        # Add metadata as tags
+        metadata_tags = [f"{k}={v}" for k, v in metadata.items()]
+        model.add_tags(metadata_tags)
+
+        # Store in model labels if available
+        if hasattr(model, "labels") and model.labels:
+            for key, value in metadata.items():
+                model.labels.append(f"{key}: {value}")
 
     # Link model to task
     model.update_task(task.id)
@@ -65,11 +71,21 @@ def get_model_versions(
     Returns:
         List of model versions
     """
-    models = Model.list_models(
-        project_name=project_name,
-        model_name=model_name,
-    )
-    return list(models) if models else []
+    try:
+        # Try to get models from project
+        from clearml import Task
+
+        # Get tasks that have models
+        tasks = Task.get_tasks(project_name=project_name)
+        models = []
+        for task in tasks:
+            if hasattr(task, "models") and task.models:
+                for model in task.models.output:
+                    if model_name in model.name:
+                        models.append(model)
+        return models
+    except Exception:
+        return []
 
 
 def compare_models(

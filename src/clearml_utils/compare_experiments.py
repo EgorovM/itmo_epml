@@ -26,9 +26,10 @@ def main():
 
     for exp in experiments:
         algorithm = exp.get("parameters", {}).get("algorithm", "unknown")
-        accuracy = exp.get("metric", 0.0)
+        accuracy = exp.get("metric")
+        accuracy_str = f"{accuracy:.4f}" if accuracy is not None else "N/A"
         task_id = exp.get("task_id", "unknown")
-        print(f"{algorithm:<25} {accuracy:<12.4f} {task_id:<40}")
+        print(f"{algorithm:<25} {accuracy_str:<12} {task_id:<40}")
 
     print("=" * 80)
 

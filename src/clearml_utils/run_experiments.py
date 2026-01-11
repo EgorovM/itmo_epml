@@ -7,7 +7,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 from src.clearml_utils.train_with_clearml import load_data, train_model
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def run_all_experiments():
     """Run experiments with different algorithms."""
-    # Load data
+    # Load data once
     X_train, X_test, y_train, y_test = load_data()
 
     from typing import Any
@@ -33,11 +32,6 @@ def run_all_experiments():
             "RandomForest",
             RandomForestClassifier(n_estimators=100, random_state=42),
             {"n_estimators": 100, "max_depth": None, "algorithm": "RandomForest"},
-        ),
-        (
-            "SVM",
-            SVC(kernel="rbf", random_state=42),
-            {"kernel": "rbf", "C": 1.0, "algorithm": "SVM"},
         ),
         (
             "KNN",
