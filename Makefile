@@ -115,4 +115,16 @@ train-pipeline: ## Run full training pipeline (prepare data + train)
 	python src/data/prepare_data.py
 	python src/models/train_with_mlflow.py
 
+run-experiments: ## Run all ML experiments
+	python src/experiments/run_experiments.py
+
+compare-experiments: ## Compare and filter experiments
+	python src/experiments/compare_experiments.py
+
+mlflow-ui-db: ## Start MLflow UI with SQLite database
+	mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
+
+reset-mlflow-db: ## Reset MLflow database (fix migration errors)
+	python scripts/reset_mlflow_db.py
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test

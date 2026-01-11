@@ -184,6 +184,8 @@ uv.lock
 # MLflow
 mlruns/
 mlartifacts/
+mlflow.db
+mlflow.db-journal
 
 # Docker
 .dockerignore
