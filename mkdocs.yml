@@ -1,0 +1,91 @@
+site_name: EPML Project Documentation
+site_description: Engineering Practices for Machine Learning - Complete Documentation
+site_author: EPML Team
+site_url: https://your-username.github.io/epml
+
+repo_name: epml
+repo_url: https://github.com/your-username/epml
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+            show_source: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Configuration: getting-started/configuration.md
+  - User Guide:
+    - Project Structure: user-guide/structure.md
+    - Data Versioning: user-guide/data-versioning.md
+    - Model Versioning: user-guide/model-versioning.md
+    - Experiment Tracking: user-guide/experiment-tracking.md
+    - Pipelines: user-guide/pipelines.md
+  - Deployment:
+    - Docker Setup: deployment/docker.md
+    - ClearML Server: deployment/clearml.md
+    - CI/CD: deployment/cicd.md
+  - API Reference:
+    - MLflow Utils: api/mlflow-utils.md
+    - ClearML Utils: api/clearml-utils.md
+    - Pipeline Utils: api/pipeline-utils.md
+  - Reports:
+    - Experiment Reports: reports/experiments.md
+    - Model Comparison: reports/comparison.md
+    - Generated Reports: reports/generated-reports.md
+    - Latest Report: reports/experiment_report.md
+  - Contributing:
+    - Development Setup: contributing/setup.md
+    - Code Style: contributing/code-style.md
+  - About:
+    - License: about/license.md
+    - Authors: about/authors.md

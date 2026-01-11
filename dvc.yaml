@@ -1,0 +1,83 @@
+stages:
+  prepare_data:
+    cmd: python src/data/prepare_data.py
+    deps:
+      - src/data/prepare_data.py
+      - data/raw/iris.csv
+    outs:
+      - data/processed/iris_processed.csv
+    metrics:
+      - metrics/data_stats.json
+    plots:
+      - plots/data_distribution.json
+
+  train_random_forest:
+    cmd: python src/pipeline/train_with_config.py model=random_forest
+    deps:
+      - data/processed/iris_processed.csv
+      - src/pipeline/train_with_config.py
+      - conf/config.yaml
+      - conf/model/random_forest.yaml
+    outs:
+      - models/randomforest_model.pkl
+    metrics:
+      - metrics/randomforest_metrics.json
+    params:
+      - train.test_size
+      - train.random_state
+
+  train_svm:
+    cmd: python src/pipeline/train_with_config.py model=svm
+    deps:
+      - data/processed/iris_processed.csv
+      - src/pipeline/train_with_config.py
+      - conf/config.yaml
+      - conf/model/svm.yaml
+    outs:
+      - models/svm_model.pkl
+    metrics:
+      - metrics/svm_metrics.json
+    params:
+      - train.test_size
+      - train.random_state
+
+  train_logistic:
+    cmd: python src/pipeline/train_with_config.py model=logistic_regression
+    deps:
+      - data/processed/iris_processed.csv
+      - src/pipeline/train_with_config.py
+      - conf/config.yaml
+      - conf/model/logistic_regression.yaml
+    outs:
+      - models/logisticregression_model.pkl
+    metrics:
+      - metrics/logisticregression_metrics.json
+    params:
+      - train.test_size
+      - train.random_state
+
+  train_knn:
+    cmd: python src/pipeline/train_with_config.py model=knn
+    deps:
+      - data/processed/iris_processed.csv
+      - src/pipeline/train_with_config.py
+      - conf/config.yaml
+      - conf/model/knn.yaml
+    outs:
+      - models/knn_model.pkl
+    metrics:
+      - metrics/knn_metrics.json
+    params:
+      - train.test_size
+      - train.random_state
+
+  compare_models:
+    cmd: python src/experiments/compare_experiments.py
+    deps:
+      - src/experiments/compare_experiments.py
+      - models/randomforest_model.pkl
+      - models/svm_model.pkl
+      - models/logisticregression_model.pkl
+      - models/knn_model.pkl
+    metrics:
+      - metrics/comparison_results.json

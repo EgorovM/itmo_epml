@@ -1,0 +1,35 @@
+# Main configuration file
+defaults:
+  - model: random_forest
+  - data: iris
+  - _self_
+
+# Project settings
+project:
+  name: epml
+  version: 0.1.0
+
+# Paths
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  models: models
+  metrics: metrics
+  reports: reports
+
+# MLflow settings
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experiment_name: iris-classification
+
+# Training settings
+train:
+  test_size: 0.2
+  random_state: 42
+  cv_folds: 5
+
+# Monitoring
+monitoring:
+  enabled: true
+  log_file: logs/pipeline.log
+  notify_on_completion: true

@@ -1,0 +1,142 @@
+version: "3.8"
+
+services:
+  apiserver:
+    command:
+      - apiserver
+    container_name: clearml-apiserver
+    image: clearml/server:latest
+    restart: unless-stopped
+    volumes:
+      - clearml_logs:/var/log/clearml
+      - clearml_config:/opt/clearml/config
+      - clearml_fileserver_data:/mnt/fileserver
+    depends_on:
+      - redis
+      - mongo
+      - elasticsearch
+      - fileserver
+    environment:
+      CLEARML_ELASTIC_SERVICE_HOST: elasticsearch
+      CLEARML_ELASTIC_SERVICE_PORT: 9200
+      CLEARML_MONGODB_SERVICE_HOST: mongo
+      CLEARML_MONGODB_SERVICE_PORT: 27017
+      CLEARML_REDIS_SERVICE_HOST: redis
+      CLEARML_REDIS_SERVICE_PORT: 6379
+      CLEARML_SERVER_DEPLOYMENT_TYPE: linux
+      CLEARML__apiserver__pre_populate__enabled: "true"
+      CLEARML__apiserver__pre_populate__zip_files: "/opt/clearml/db-pre-populate"
+      CLEARML__apiserver__pre_populate__artifacts_path: "/mnt/fileserver"
+      CLEARML__apiserver__pre_populate__default_user_name: "admin"
+      CLEARML__apiserver__pre_populate__default_user_password: "admin"
+      CLEARML__auth__admin_user: "admin"
+      CLEARML__auth__admin_pass: "admin"
+      CLEARML__services__async_urls_delete__enabled: "true"
+      CLEARML__services__async_urls_delete__fileserver__url_prefixes: "[${CLEARML_FILES_HOST:-}]"
+      CLEARML__secure__credentials__services_agent__user_key: ${CLEARML_AGENT_ACCESS_KEY:-}
+      CLEARML__secure__credentials__services_agent__user_secret: ${CLEARML_AGENT_SECRET_KEY:-}
+    ports:
+      - "8008:8008"
+    networks:
+      - backend
+      - frontend
+
+  elasticsearch:
+    networks:
+      - backend
+    container_name: clearml-elastic
+    environment:
+      bootstrap.memory_lock: "true"
+      cluster.name: clearml
+      cluster.routing.allocation.node_initial_primaries_recoveries: "500"
+      cluster.routing.allocation.disk.watermark.low: 500mb
+      cluster.routing.allocation.disk.watermark.high: 500mb
+      cluster.routing.allocation.disk.watermark.flood_stage: 500mb
+      discovery.type: "single-node"
+      http.compression_level: "7"
+      node.name: clearml
+      reindex.remote.whitelist: "'*.*'"
+      xpack.security.enabled: "false"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    image: elasticsearch:8.17.0
+    restart: unless-stopped
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+      - elasticsearch_logs:/usr/share/elasticsearch/logs
+
+  fileserver:
+    networks:
+      - backend
+      - frontend
+    command:
+      - fileserver
+    container_name: clearml-fileserver
+    image: clearml/server:latest
+    environment:
+      CLEARML__fileserver__delete__allow_batch: "true"
+    restart: unless-stopped
+    volumes:
+      - clearml_logs:/var/log/clearml
+      - clearml_fileserver_data:/mnt/fileserver
+      - clearml_config:/opt/clearml/config
+    ports:
+      - "8081:8081"
+
+  mongo:
+    networks:
+      - backend
+    container_name: clearml-mongo
+    image: mongo:7.0.22
+    restart: unless-stopped
+    command: --setParameter internalQueryMaxBlockingSortMemoryUsageBytes=196100200
+    volumes:
+      - mongo_db_data:/data/db
+      - mongo_configdb_data:/data/configdb
+
+  redis:
+    networks:
+      - backend
+    container_name: clearml-redis
+    image: redis:7.4.1
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  webserver:
+    command:
+      - webserver
+    container_name: clearml-webserver
+    # environment:
+    #  CLEARML_SERVER_SUB_PATH : clearml-web # Allow Clearml to be served with a URL path prefix.
+    image: clearml/server:latest
+    restart: unless-stopped
+    depends_on:
+      - apiserver
+    ports:
+      - "8080:80"
+    networks:
+      - backend
+      - frontend
+
+volumes:
+  clearml_logs:
+  clearml_config:
+  clearml_fileserver_data:
+  elasticsearch_data:
+  elasticsearch_logs:
+  mongo_db_data:
+  mongo_configdb_data:
+  redis_data:
+  clearml_agent_data:
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
