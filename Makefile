@@ -151,6 +151,9 @@ clearml-compare: ## Compare ClearML experiments
 clearml-train: ## Train single model with ClearML
 	python src/clearml_utils/train_with_clearml.py
 
+clearml-pipeline-tasks: ## Create properly configured tasks for pipeline
+	python scripts/create_pipeline_tasks.py
+
 clearml-pipeline: ## Create and run ClearML pipeline
 	python scripts/run_clearml_pipeline.py
 

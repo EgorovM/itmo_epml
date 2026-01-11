@@ -215,14 +215,25 @@ def create_simple_training_pipeline(
         parents = [f"train_{algorithms[i-1].lower()}"] if i > 0 else []
 
         try:
+            # Try to find pipeline-specific task first (properly configured)
+            pipeline_task_name = f"{algorithm}_pipeline_task"
+            pipeline_tasks = Task.query_tasks(
+                project_name=project_name,
+                task_name=pipeline_task_name,
+            )
+
+            # Use pipeline task if found, otherwise use regular training task
+            base_task_name = pipeline_task_name if pipeline_tasks else f"{algorithm}_training"
+
+            # Add step with proper configuration for agent execution
             pipeline.add_step(
                 name=step_name,
                 base_task_project=project_name,
-                base_task_name=f"{algorithm}_training",
+                base_task_name=base_task_name,
                 parents=parents,
                 execution_queue="default",  # Set default queue for execution
             )
-            logger.info(f"✅ Added {step_name} step")
+            logger.info(f"✅ Added {step_name} step (using {base_task_name})")
         except Exception as e:
             logger.warning(f"⚠️ Could not add {step_name}: {e}")
 
