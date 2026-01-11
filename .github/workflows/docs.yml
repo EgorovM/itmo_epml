@@ -45,12 +45,15 @@ jobs:
       - name: Build documentation
         run: mkdocs build
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
         with:
-          name: documentation
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
           path: site
-          retention-days: 1
 
   deploy:
     needs: build
@@ -63,17 +66,6 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: documentation
-          path: site
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
