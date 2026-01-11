@@ -81,6 +81,8 @@ nav:
   - Reports:
     - Experiment Reports: reports/experiments.md
     - Model Comparison: reports/comparison.md
+    - Generated Reports: reports/generated-reports.md
+    - Latest Report: reports/experiment_report.md
   - Contributing:
     - Development Setup: contributing/setup.md
     - Code Style: contributing/code-style.md
