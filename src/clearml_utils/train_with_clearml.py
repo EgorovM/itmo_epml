@@ -66,15 +66,25 @@ def train_model(
     Returns:
         Accuracy score
     """
-    task = None
-    try:
-        # Setup ClearML task for this experiment
+    # Check if task already exists (when executed by pipeline/agent)
+    from clearml import Task
+
+    task = Task.current_task()
+    task_created = False
+
+    if task is None:
+        # Create new task only if not executed by agent/pipeline
         task = setup_clearml(
             project_name="EPML",
             task_name=f"{algorithm_name}_training",
             tags=[algorithm_name, "iris", "classification"],
         )
+        task_created = True
+        logger.info(f"📝 Created new ClearML task: {task.id}")
+    else:
+        logger.info(f"📋 Using existing ClearML task: {task.id} (from pipeline/agent)")
 
+    try:
         # Log parameters
         log_parameters(params, task)
 
@@ -161,13 +171,24 @@ def train_model(
         logger.info(f"✅ Model trained with accuracy: {accuracy:.4f}")
         logger.info(f"✅ Model registered: {model_registry.id}")
 
-        # Mark as completed and close task
         try:
             task.mark_completed()
-        except Exception:
-            pass
-        finally:
-            task.close()
+            logger.info(f"✅ Task {task.id} marked as completed")
+        except Exception as e:
+            logger.error(f"❌ CRITICAL: Could not mark task as completed: {e}")
+            try:
+                task.flush()
+            except Exception:
+                pass
+
+        if task_created:
+            try:
+                task.close()
+                logger.info("✅ Task closed (we created it)")
+            except Exception as e:
+                logger.warning(f"⚠️ Could not close task: {e}")
+        else:
+            logger.info("ℹ️ Task not closed (managed by pipeline)")
 
         return accuracy
     except Exception as e:
@@ -175,8 +196,91 @@ def train_model(
         if task is not None:
             try:
                 task.mark_failed(str(e))
-            except Exception:
-                pass
-            finally:
-                task.close()
+                logger.error(f"❌ Task marked as failed: {e}")
+            except Exception as e2:
+                logger.error(f"Could not mark task as failed: {e2}")
+            # Only close if we created the task
+            if task_created:
+                try:
+                    task.close()
+                except Exception:
+                    pass
         raise
+
+
+if __name__ == "__main__":
+    import sys
+
+    from clearml import Task
+    from sklearn.ensemble import (
+        AdaBoostClassifier,
+        GradientBoostingClassifier,
+        RandomForestClassifier,
+    )
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.naive_bayes import GaussianNB
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.neural_network import MLPClassifier
+    from sklearn.tree import DecisionTreeClassifier
+
+    try:
+        # Get parameters from ClearML task if available (when executed by agent)
+        task = Task.current_task()
+        algorithm_name = "RandomForest"  # default
+        params = {}
+
+        if task:
+            # Try to get parameters from task
+            try:
+                task_params = task.get_parameters()
+                algorithm_name = task_params.get("algorithm_name", algorithm_name)
+                params = task_params.get("params", {})
+                logger.info(f"📋 Loaded parameters from ClearML task: {algorithm_name}")
+            except Exception as e:
+                logger.warning(f"Could not get parameters from task: {e}")
+
+        # Load data
+        X_train, X_test, y_train, y_test = load_data()
+
+        # Create model based on algorithm_name
+        model_map = {
+            "LogisticRegression": LogisticRegression(random_state=42, max_iter=1000),
+            "RandomForest": RandomForestClassifier(n_estimators=100, random_state=42),
+            "KNN": KNeighborsClassifier(n_neighbors=5),
+            "DecisionTree": DecisionTreeClassifier(random_state=42),
+            "GradientBoosting": GradientBoostingClassifier(random_state=42),
+            "AdaBoost": AdaBoostClassifier(random_state=42),
+            "NaiveBayes": GaussianNB(),
+            "MLP": MLPClassifier(random_state=42, max_iter=1000),
+        }
+
+        model = model_map.get(
+            algorithm_name, RandomForestClassifier(n_estimators=100, random_state=42)
+        )
+
+        # Merge params with model defaults (exclude 'algorithm' key)
+        if params:
+            model_params = {
+                k: v for k, v in params.items() if k != "algorithm" and hasattr(model, k)
+            }
+            if model_params:
+                model.set_params(**model_params)
+                logger.info(f"✅ Applied parameters: {model_params}")
+
+        # Train model
+        accuracy = train_model(algorithm_name, model, X_train, X_test, y_train, y_test, params)
+
+        logger.info(f"✅ Training completed successfully with accuracy: {accuracy:.4f}")
+
+        # Explicitly exit with success code
+        sys.exit(0)
+
+    except KeyboardInterrupt:
+        logger.error("❌ Training interrupted by user")
+        sys.exit(130)  # Standard exit code for SIGINT
+    except Exception as e:
+        logger.error(f"❌ Training failed with error: {e}")
+        import traceback
+
+        traceback.print_exc()
+        sys.exit(1)  # Exit with error code
