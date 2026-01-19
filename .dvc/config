@@ -1,0 +1,7 @@
+[core]
+    no_scm = True
+    remote = local
+['remote "local"']
+    url = cache
+['remote "s3"']
+    url = s3://epml-data/models

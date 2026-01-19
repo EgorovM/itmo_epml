@@ -1,7 +1,5 @@
 """Utilities for MLflow experiment tracking."""
 
-import functools
-from collections.abc import Callable
 from contextlib import contextmanager
 from typing import Any
 
@@ -57,62 +55,6 @@ def setup_mlflow(
             # Experiment might already exist
             pass
     mlflow.set_experiment(experiment_name)
-
-
-def track_experiment(
-    log_params: bool = True,
-    log_metrics: bool = True,
-    log_model: bool = True,
-    log_artifacts: bool = True,
-):
-    """Decorator for automatic experiment tracking.
-
-    Args:
-        log_params: Whether to log function parameters
-        log_metrics: Whether to log metrics from return value
-        log_model: Whether to log model if returned
-        log_artifacts: Whether to log artifacts
-    """
-
-    def decorator(func: Callable) -> Callable:
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            with mlflow.start_run(run_name=func.__name__):
-                # Log parameters
-                if log_params:
-                    params = {}
-                    # Log args if they are named
-                    if args:
-                        # Try to get parameter names from function signature
-                        import inspect
-
-                        sig = inspect.signature(func)
-                        param_names = list(sig.parameters.keys())
-                        for i, arg in enumerate(args):
-                            if i < len(param_names):
-                                params[param_names[i]] = str(arg)
-                    # Log kwargs
-                    params.update({k: str(v) for k, v in kwargs.items()})
-                    mlflow.log_params(params)
-
-                # Execute function
-                result = func(*args, **kwargs)
-
-                # Log metrics if result is a dict with metrics
-                if log_metrics and isinstance(result, dict):
-                    metrics = {k: v for k, v in result.items() if isinstance(v, int | float)}
-                    if metrics:
-                        mlflow.log_metrics(metrics)
-
-                # Log model if result is a model
-                if log_model and hasattr(result, "predict"):
-                    mlflow.sklearn.log_model(result, "model")
-
-                return result
-
-        return wrapper
-
-    return decorator
 
 
 @contextmanager
