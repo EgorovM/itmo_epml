@@ -13,6 +13,8 @@
 - ✅ Pre-commit hooks для контроля качества кода
 - ✅ Линтеры и форматтеры (Black, isort, Ruff, MyPy, Bandit)
 - ✅ Тестирование с pytest
+- ✅ Версионирование данных через DVC
+- ✅ Версионирование моделей через MLflow
 
 ## 🚀 Быстрый старт
 
@@ -63,6 +65,12 @@ epml/
 ├── reports/               # Отчеты и визуализации
 │   └── figures/          # Графики
 ├── logs/                  # Логи
+├── .dvc/                  # DVC конфигурация и кэш
+├── mlruns/                # MLflow tracking данные
+├── metrics/               # Метрики экспериментов
+├── plots/                 # Данные для графиков
+├── params/                # Параметры обучения
+├── dvc.yaml              # DVC pipeline
 ├── pyproject.toml         # Конфигурация проекта и зависимостей
 ├── .pre-commit-config.yaml # Конфигурация pre-commit hooks
 ├── Dockerfile             # Docker образ
@@ -90,6 +98,11 @@ make clean             # Очистить временные файлы
 make docker-build      # Собрать Docker образ
 make docker-up         # Запустить Docker контейнеры
 make run-notebook-docker # Запустить Jupyter в Docker
+make dvc-init          # Инициализация DVC
+make dvc-repro         # Воспроизведение DVC pipeline
+make mlflow-ui         # Запуск MLflow UI
+make mlflow-compare    # Сравнение моделей
+make train-pipeline    # Полный pipeline (prepare + train)
 ```
 
 ## 🐳 Docker
@@ -216,3 +229,136 @@ main          # Основная ветка (production-ready код)
    git merge develop
    git tag -a v1.0.0 -m "Release version 1.0.0"
    ```
+
+## 📊 Версионирование данных и моделей
+
+Проект использует **DVC** для версионирования данных и **MLflow** для версионирования моделей.
+
+### DVC - Версионирование данных
+
+#### Установка и инициализация
+
+```bash
+# DVC уже установлен через зависимости
+dvc init --no-scm
+```
+
+#### Настройка remote storage
+
+**Local storage (по умолчанию):**
+```bash
+dvc remote add -d local .dvc/cache
+```
+
+**S3 storage (опционально):**
+```bash
+dvc remote add s3 s3://epml-data/models
+dvc remote modify s3 endpointurl <your-endpoint>
+```
+
+#### Добавление данных в DVC
+
+```bash
+# Скачать данные
+python src/data/download_data.py
+
+# Добавить в DVC
+dvc add data/raw/iris.csv
+
+# Закоммитить .dvc файл
+git add data/raw/iris.csv.dvc .gitignore
+git commit -m "Add iris dataset to DVC"
+```
+
+#### Воспроизведение pipeline
+
+```bash
+# Запустить весь pipeline
+dvc repro
+
+# Или отдельные этапы
+dvc repro prepare_data
+dvc repro train
+```
+
+#### Работа с версиями
+
+```bash
+# Просмотр истории
+dvc list data/raw/
+
+# Откат к предыдущей версии
+git checkout HEAD~1 data/raw/iris.csv.dvc
+dvc checkout
+```
+
+### MLflow - Версионирование моделей
+
+#### Запуск MLflow UI
+
+```bash
+# Локально
+mlflow ui --host 0.0.0.0 --port 5000
+
+# Или через Makefile
+make mlflow-ui
+
+# В Docker
+docker-compose up mlflow
+# Доступен на http://localhost:5001
+```
+
+#### Обучение модели с MLflow
+
+```bash
+# Подготовить данные
+python src/data/prepare_data.py
+
+# Обучить модель
+python src/models/train_with_mlflow.py
+```
+
+#### Сравнение моделей
+
+```bash
+python src/models/compare_models.py
+```
+
+#### Просмотр метаданных
+
+MLflow автоматически сохраняет:
+- Параметры модели (из `params/training.yaml`)
+- Метрики (accuracy, n_samples, n_features)
+- Артефакты (модель, метрики в JSON)
+- Версию кода и окружения
+
+### Полный pipeline
+
+```bash
+# 1. Подготовить данные
+python src/data/download_data.py
+dvc add data/raw/iris.csv
+
+# 2. Запустить pipeline
+dvc repro
+
+# 3. Просмотреть результаты в MLflow
+make mlflow-ui
+```
+
+### Воспроизводимость
+
+Все зависимости зафиксированы в `pyproject.toml`. Для воспроизведения:
+
+```bash
+# 1. Установить зависимости
+uv venv --python 3.12
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+
+# 2. Восстановить данные
+dvc pull
+
+# 3. Воспроизвести pipeline
+dvc repro
+```
