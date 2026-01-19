@@ -29,8 +29,8 @@ stages:
       size: 4189
     - path: src/models/train_with_mlflow.py
       hash: md5
-      md5: 5b947d047f2f64e63b15948fc9ab7326
-      size: 3697
+      md5: d1bd8f736b1459ca4dfa5c03f262fed0
+      size: 3161
     params:
       params.yaml:
         train.max_depth:
@@ -41,9 +41,9 @@ stages:
     outs:
     - path: metrics/model_metrics.json
       hash: md5
-      md5: 5970c7de9ddbaef53c000a86784e1c3f
-      size: 672
+      md5: 7cff58dcc9ce52cda0fc66b1a94ebed2
+      size: 59
     - path: models/iris_classifier.pkl
       hash: md5
-      md5: eed49793f17098a124c226137ea2c62f
-      size: 186929
+      md5: 290f5503d5321a2c39b624627aae2d68
+      size: 187249
