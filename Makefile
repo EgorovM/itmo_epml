@@ -88,4 +88,55 @@ requirements: ## Generate requirements.txt from pyproject.toml
 	$(UV) pip compile pyproject.toml -o requirements.txt
 	$(UV) pip compile pyproject.toml --extra dev -o requirements-dev.txt
 
+dvc-init: ## Initialize DVC
+	$(UV) run dvc init --no-scm
+
+dvc-add-data: ## Add data to DVC tracking
+	dvc add data/raw/iris.csv || echo "Data file may not exist, creating example..."
+	@mkdir -p data/raw
+	@touch data/raw/iris.csv || true
+
+dvc-repro: ## Reproduce DVC pipeline
+	dvc repro
+
+dvc-push: ## Push data to remote storage
+	dvc push
+
+dvc-pull: ## Pull data from remote storage
+	dvc pull
+
+mlflow-ui: ## Start MLflow UI
+	mlflow ui --host 0.0.0.0 --port 5000
+
+mlflow-compare: ## Compare model versions
+	python src/models/compare_models.py
+
+train-pipeline: ## Run full training pipeline (prepare data + train)
+	python src/data/prepare_data.py
+	python src/models/train_with_mlflow.py
+
+run-experiments: ## Run all ML experiments
+	python src/experiments/run_experiments.py
+
+compare-experiments: ## Compare and filter experiments
+	python src/experiments/compare_experiments.py
+
+mlflow-ui-db: ## Start MLflow UI with SQLite database
+	mlflow ui --backend-store-uri sqlite:///mlflow.db --host 0.0.0.0 --port 5000
+
+reset-mlflow-db: ## Reset MLflow database (fix migration errors)
+	python scripts/reset_mlflow_db.py
+
+pipeline-run: ## Run complete pipeline with Hydra
+	python src/pipeline/run_pipeline.py
+
+pipeline-train: ## Train model with specific config (usage: make pipeline-train MODEL=random_forest)
+	python src/pipeline/train_with_config.py model=$(MODEL)
+
+pipeline-all: ## Run pipeline for all models
+	python src/pipeline/run_all_models.py
+
+pipeline-validate: ## Validate configuration using Hydra
+	python -c "from hydra import compose, initialize_config_dir; from pathlib import Path; from src.pipeline.validate_config import validate_config; config_dir = Path('conf'); initialize_config_dir(config_dir=str(config_dir), version_base=None); cfg = compose(config_name='config'); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
+
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test

@@ -1,0 +1,182 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python src/data/prepare_data.py
+    deps:
+    - path: data/raw/iris.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: src/data/prepare_data.py
+      hash: md5
+      md5: 9badc85a576c219bc06f3abcbee15d3a
+      size: 1825
+    outs:
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: metrics/data_stats.json
+      hash: md5
+      md5: ad10eb281ef2f449036c114994e9ef25
+      size: 150
+    - path: plots/data_distribution.json
+      hash: md5
+      md5: 450409af5aab392a8414dcfb6e0ecec6
+      size: 5496
+  train_random_forest:
+    cmd: python src/pipeline/train_with_config.py model=random_forest
+    deps:
+    - path: conf/config.yaml
+      hash: md5
+      md5: a62bde69ca4d7c90560ad619ba9158d9
+      size: 552
+    - path: conf/model/random_forest.yaml
+      hash: md5
+      md5: 901957a10ee656166e831a5c4d1d36c8
+      size: 196
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: src/pipeline/train_with_config.py
+      hash: md5
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
+    params:
+      params.yaml:
+        train.random_state: 42
+        train.test_size: 0.2
+    outs:
+    - path: metrics/randomforest_metrics.json
+      hash: md5
+      md5: 9ffa31a4029a55e0656823f217de44fe
+      size: 664
+    - path: models/randomforest_model.pkl
+      hash: md5
+      md5: eed49793f17098a124c226137ea2c62f
+      size: 186929
+  train_svm:
+    cmd: python src/pipeline/train_with_config.py model=svm
+    deps:
+    - path: conf/config.yaml
+      hash: md5
+      md5: a62bde69ca4d7c90560ad619ba9158d9
+      size: 552
+    - path: conf/model/svm.yaml
+      hash: md5
+      md5: 22863ddeaf616a5294b4668d812c76b7
+      size: 128
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: src/pipeline/train_with_config.py
+      hash: md5
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
+    params:
+      params.yaml:
+        train.random_state: 42
+        train.test_size: 0.2
+    outs:
+    - path: metrics/svm_metrics.json
+      hash: md5
+      md5: cdd395cd412f5e11a2db88d4a91c3abe
+      size: 655
+    - path: models/svm_model.pkl
+      hash: md5
+      md5: 499e7626a8497e299c2b5e417b525f39
+      size: 5363
+  train_logistic:
+    cmd: python src/pipeline/train_with_config.py model=logistic_regression
+    deps:
+    - path: conf/config.yaml
+      hash: md5
+      md5: a62bde69ca4d7c90560ad619ba9158d9
+      size: 552
+    - path: conf/model/logistic_regression.yaml
+      hash: md5
+      md5: 10c33696969094769682eb990897bf7a
+      size: 162
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: src/pipeline/train_with_config.py
+      hash: md5
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
+    params:
+      params.yaml:
+        train.random_state: 42
+        train.test_size: 0.2
+    outs:
+    - path: metrics/logisticregression_metrics.json
+      hash: md5
+      md5: 919d58b73202434e5dd676b46d4cc2ae
+      size: 670
+    - path: models/logisticregression_model.pkl
+      hash: md5
+      md5: 4303d42f281bcb7ca5172261e7822da1
+      size: 991
+  train_knn:
+    cmd: python src/pipeline/train_with_config.py model=knn
+    deps:
+    - path: conf/config.yaml
+      hash: md5
+      md5: a62bde69ca4d7c90560ad619ba9158d9
+      size: 552
+    - path: conf/model/knn.yaml
+      hash: md5
+      md5: ef125a1664ea7ec1c440d068a7fb3aff
+      size: 116
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: src/pipeline/train_with_config.py
+      hash: md5
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
+    params:
+      params.yaml:
+        train.random_state: 42
+        train.test_size: 0.2
+    outs:
+    - path: metrics/knn_metrics.json
+      hash: md5
+      md5: 9d5a511ad026f534cc29263dc8c7ea2d
+      size: 655
+    - path: models/knn_model.pkl
+      hash: md5
+      md5: 6124499cf14068cf28ddeaf40b737e72
+      size: 11334
+  compare_models:
+    cmd: python src/experiments/compare_experiments.py
+    deps:
+    - path: models/knn_model.pkl
+      hash: md5
+      md5: 6124499cf14068cf28ddeaf40b737e72
+      size: 11334
+    - path: models/logisticregression_model.pkl
+      hash: md5
+      md5: 4303d42f281bcb7ca5172261e7822da1
+      size: 991
+    - path: models/randomforest_model.pkl
+      hash: md5
+      md5: eed49793f17098a124c226137ea2c62f
+      size: 186929
+    - path: models/svm_model.pkl
+      hash: md5
+      md5: 499e7626a8497e299c2b5e417b525f39
+      size: 5363
+    - path: src/experiments/compare_experiments.py
+      hash: md5
+      md5: f1a712dc6b19c89b64b7e416fc6daee5
+      size: 4153
+    outs:
+    - path: metrics/comparison_results.json
+      hash: md5
+      md5: f864c2eeea59d39cf291be335d62e447
+      size: 9755

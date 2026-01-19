@@ -1,0 +1,92 @@
+[
+  {
+    "algorithm": "LogisticRegression",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "RandomForest",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "RandomForest_200",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "RandomForest_deep",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "DecisionTree",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "DecisionTree_pruned",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "SVM_linear",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "SVM_rbf",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "SVM_poly",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "KNN_3",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "KNN_5",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "KNN_7",
+    "accuracy": 0.9666666666666667,
+    "status": "success"
+  },
+  {
+    "algorithm": "NaiveBayes",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "GradientBoosting",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "AdaBoost",
+    "accuracy": 0.9333333333333333,
+    "status": "success"
+  },
+  {
+    "algorithm": "MLP",
+    "accuracy": 1.0,
+    "status": "success"
+  },
+  {
+    "algorithm": "SGD",
+    "accuracy": 0.5666666666666667,
+    "status": "success"
+  },
+  {
+    "algorithm": "Voting",
+    "accuracy": 1.0,
+    "status": "success"
+  }
+]
