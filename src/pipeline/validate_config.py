@@ -97,23 +97,3 @@ def validate_config(cfg: DictConfig) -> dict[str, Any]:
         "errors": errors,
         "warnings": warnings,
     }
-
-
-def compose_configs(base_config: str = "config", overrides: list[str] | None = None):
-    """Compose configurations from multiple sources.
-
-    Args:
-        base_config: Base configuration name
-        overrides: List of configuration overrides
-
-    Returns:
-        Composed configuration
-    """
-    from pathlib import Path
-
-    from hydra import compose, initialize_config_dir
-
-    config_dir = Path(__file__).parent.parent.parent / "conf"
-    with initialize_config_dir(config_dir=str(config_dir), version_base=None):
-        cfg = compose(config_name=base_config, overrides=overrides or [])
-        return cfg

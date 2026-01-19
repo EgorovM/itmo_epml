@@ -136,7 +136,7 @@ pipeline-train: ## Train model with specific config (usage: make pipeline-train 
 pipeline-all: ## Run pipeline for all models
 	python src/pipeline/run_all_models.py
 
-pipeline-validate: ## Validate configuration
-	python -c "from src.pipeline.validate_config import validate_config, compose_configs; cfg = compose_configs(); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
+pipeline-validate: ## Validate configuration using Hydra
+	python -c "from hydra import compose, initialize_config_dir; from pathlib import Path; from src.pipeline.validate_config import validate_config; config_dir = Path('conf'); initialize_config_dir(config_dir=str(config_dir), version_base=None); cfg = compose(config_name='config'); result = validate_config(cfg); print('Valid:', result['valid']); print('Errors:', result['errors']); print('Warnings:', result['warnings'])"
 
 all: clean install-dev pre-commit-install check test ## Run full pipeline: clean, install, check, test

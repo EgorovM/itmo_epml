@@ -1,8 +1,43 @@
 {
   "summary": {
-    "total_runs": 44,
+    "total_runs": 49,
     "best_accuracy": 1.0,
     "runs": [
+      {
+        "run_id": "19b9c80b1afb43549e59260dcaf11336",
+        "run_name": "KNN_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "KNN"
+      },
+      {
+        "run_id": "3a397ec612514b259c5272f81582edec",
+        "run_name": "LogisticRegression_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "LogisticRegression"
+      },
+      {
+        "run_id": "c6dafcebdfff42899825184384c2ca5b",
+        "run_name": "SVM_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "SVM"
+      },
+      {
+        "run_id": "444844bcf9ea4da380c8cb80c4890241",
+        "run_name": "RandomForest_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
+      {
+        "run_id": "ada88118a3f84651b8414c770f09adb5",
+        "run_name": "RandomForest_42",
+        "status": "FINISHED",
+        "accuracy": 1.0,
+        "algorithm": "RandomForest"
+      },
       {
         "run_id": "94336cd13fdd4c7c8691fd3701a85ef6",
         "run_name": "RandomForest_42",
@@ -313,5 +348,5 @@
       }
     ]
   },
-  "timestamp": "2026-01-12T02:21:12.130058"
+  "timestamp": "2026-01-19T15:24:43.562427"
 }

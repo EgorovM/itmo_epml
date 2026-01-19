@@ -8,6 +8,7 @@ from omegaconf import DictConfig, OmegaConf
 
 from src.pipeline.monitor import PipelineMonitor
 from src.pipeline.notify import create_notification_file, print_notification
+from src.pipeline.validate_config import validate_config
 
 # Initialize monitor
 monitor = PipelineMonitor()
@@ -32,6 +33,17 @@ def stage_context(stage_name: str, config: DictConfig | None = None):
 @hydra.main(version_base=None, config_path="../../conf", config_name="config")
 def run_pipeline(cfg: DictConfig) -> None:
     """Run complete ML pipeline."""
+    # Validate configuration
+    validation_result = validate_config(cfg)
+    if not validation_result["valid"]:
+        error_msg = "Configuration validation failed:\n" + "\n".join(validation_result["errors"])
+        print(f"❌ {error_msg}")
+        raise ValueError(error_msg)
+
+    if validation_result["warnings"]:
+        for warning in validation_result["warnings"]:
+            print(f"⚠️  Configuration warning: {warning}")
+
     stages = []
     pipeline_start = time.time()
 

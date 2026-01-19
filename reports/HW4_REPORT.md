@@ -78,22 +78,35 @@ dependencies = [
 - Валидация параметров обучения
 - Проверка путей
 
+Валидация автоматически вызывается в скриптах `train_with_config.py` и `run_pipeline.py` перед выполнением pipeline.
+
+Валидация автоматически вызывается в скриптах `train_with_config.py` и `run_pipeline.py` перед выполнением pipeline.
+
 ### Композиция конфигураций
 
-Реализована система композиции через `src/pipeline/compose_configs.py`:
+Используется встроенная система композиции Hydra через декоратор `@hydra.main`:
 
 ```python
-cfg = get_config(model="random_forest", data="iris")
+@hydra.main(version_base=None, config_path="../../conf", config_name="config")
+def train(cfg: DictConfig) -> None:
+    # Конфигурация автоматически загружается и композируется Hydra
+    # Можно переопределить через командную строку:
+    # python script.py model=random_forest data=iris
 ```
+
+Все скрипты используют напрямую Hydra без дополнительных оберток.
 
 ## Интеграция и тестирование
 
 ### Интеграция инструментов
 
 Создан скрипт `src/pipeline/train_with_config.py`, который:
-- Использует Hydra для загрузки конфигурации
+- Использует декоратор `@hydra.main` для автоматической загрузки и композиции конфигурации
+- Валидирует конфигурацию через `validate_config()` перед выполнением
 - Интегрирован с DVC pipeline
 - Логирует в MLflow
+
+Все конфигурации управляются исключительно через Hydra без дополнительных оберток.
 
 ### Система мониторинга
 
@@ -136,8 +149,7 @@ epml/
 │   ├── run_pipeline.py
 │   ├── monitor.py
 │   ├── notify.py
-│   ├── validate_config.py
-│   └── compose_configs.py
+│   └── validate_config.py
 ├── dvc.yaml                # DVC pipeline
 └── logs/                   # Логи выполнения
     ├── pipeline.log

@@ -14,6 +14,7 @@ from omegaconf import DictConfig, OmegaConf
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 
+from src.pipeline.validate_config import validate_config
 from src.utils.mlflow_utils import setup_mlflow
 
 # Setup logging
@@ -66,6 +67,17 @@ def train(cfg: DictConfig) -> None:
     """Train model with Hydra configuration."""
     logger.info("🚀 Starting training pipeline")
     logger.info(f"Configuration:\n{OmegaConf.to_yaml(cfg)}")
+
+    # Validate configuration
+    validation_result = validate_config(cfg)
+    if not validation_result["valid"]:
+        error_msg = "Configuration validation failed:\n" + "\n".join(validation_result["errors"])
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+
+    if validation_result["warnings"]:
+        for warning in validation_result["warnings"]:
+            logger.warning(f"Configuration warning: {warning}")
 
     # Setup MLflow
     setup_mlflow(

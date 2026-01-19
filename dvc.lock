@@ -41,8 +41,8 @@ stages:
       size: 4189
     - path: src/pipeline/train_with_config.py
       hash: md5
-      md5: cbca75e19a92c6d7bd720c9bc92c922b
-      size: 4375
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
     params:
       params.yaml:
         train.random_state: 42
@@ -73,8 +73,8 @@ stages:
       size: 4189
     - path: src/pipeline/train_with_config.py
       hash: md5
-      md5: cbca75e19a92c6d7bd720c9bc92c922b
-      size: 4375
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
     params:
       params.yaml:
         train.random_state: 42
@@ -105,8 +105,8 @@ stages:
       size: 4189
     - path: src/pipeline/train_with_config.py
       hash: md5
-      md5: cbca75e19a92c6d7bd720c9bc92c922b
-      size: 4375
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
     params:
       params.yaml:
         train.random_state: 42
@@ -137,8 +137,8 @@ stages:
       size: 4189
     - path: src/pipeline/train_with_config.py
       hash: md5
-      md5: cbca75e19a92c6d7bd720c9bc92c922b
-      size: 4375
+      md5: 67ce1de95207373fb76e2a6f284a7018
+      size: 5133
     params:
       params.yaml:
         train.random_state: 42
@@ -173,10 +173,10 @@ stages:
       size: 5363
     - path: src/experiments/compare_experiments.py
       hash: md5
-      md5: 1e4f66d7ad58290da9e608537428fc24
-      size: 4165
+      md5: f1a712dc6b19c89b64b7e416fc6daee5
+      size: 4153
     outs:
     - path: metrics/comparison_results.json
       hash: md5
-      md5: 882265e045d415848a6da50f8587930f
-      size: 8774
+      md5: f864c2eeea59d39cf291be335d62e447
+      size: 9755
