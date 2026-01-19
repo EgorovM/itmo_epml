@@ -137,10 +137,9 @@ cython_debug/
 .DS_Store
 
 # Data Science specific
-data/raw/
+!data/raw/*
 data/processed/
 data/external/
-*.csv
 *.xlsx
 *.parquet
 *.h5
@@ -150,7 +149,7 @@ data/external/
 !data/external/.gitkeep
 
 # Models
-models/
+models/**
 *.pkl
 *.joblib
 *.h5
@@ -175,6 +174,17 @@ Thumbs.db
 .uv/
 uv.lock
 
+# DVC
+.dvc/cache/
+.dvc/tmp/
+.dvc/config.local
+
+# MLflow
+mlruns/
+mlartifacts/
+mlflow.db
+mlflow.db-journal
+
 # Docker
 .dockerignore
 
@@ -185,3 +195,6 @@ bandit-report.json
 *.tmp
 *.bak
 *.swp
+
+mlflow.db
+clearml.conf

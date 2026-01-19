@@ -1,0 +1,49 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python src/data/prepare_data.py
+    deps:
+    - path: src/data/prepare_data.py
+      hash: md5
+      md5: 9badc85a576c219bc06f3abcbee15d3a
+      size: 1825
+    outs:
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: metrics/data_stats.json
+      hash: md5
+      md5: ad10eb281ef2f449036c114994e9ef25
+      size: 150
+    - path: plots/data_distribution.json
+      hash: md5
+      md5: 450409af5aab392a8414dcfb6e0ecec6
+      size: 5496
+  train:
+    cmd: python src/models/train_with_mlflow.py
+    deps:
+    - path: data/processed/iris_processed.csv
+      hash: md5
+      md5: 9b81a5b2beab90b5e381dfb33627d536
+      size: 4189
+    - path: src/models/train_with_mlflow.py
+      hash: md5
+      md5: d1bd8f736b1459ca4dfa5c03f262fed0
+      size: 3161
+    params:
+      params.yaml:
+        train.max_depth:
+        train.min_samples_split: 2
+        train.n_estimators: 100
+        train.random_state: 42
+        train.test_size: 0.2
+    outs:
+    - path: metrics/model_metrics.json
+      hash: md5
+      md5: 7cff58dcc9ce52cda0fc66b1a94ebed2
+      size: 59
+    - path: models/iris_classifier.pkl
+      hash: md5
+      md5: 290f5503d5321a2c39b624627aae2d68
+      size: 187249

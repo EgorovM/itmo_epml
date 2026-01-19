@@ -1,0 +1,27 @@
+stages:
+  prepare_data:
+    cmd: python src/data/prepare_data.py
+    deps:
+      - src/data/prepare_data.py
+    outs:
+      - data/processed/iris_processed.csv
+    metrics:
+      - metrics/data_stats.json
+    plots:
+      - plots/data_distribution.json
+
+  train:
+    cmd: python src/models/train_with_mlflow.py
+    deps:
+      - data/processed/iris_processed.csv
+      - src/models/train_with_mlflow.py
+    outs:
+      - models/iris_classifier.pkl
+    metrics:
+      - metrics/model_metrics.json
+    params:
+      - train.test_size
+      - train.random_state
+      - train.n_estimators
+      - train.max_depth
+      - train.min_samples_split
