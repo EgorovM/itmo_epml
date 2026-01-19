@@ -137,10 +137,9 @@ cython_debug/
 .DS_Store
 
 # Data Science specific
-data/raw/
+!data/raw/*
 data/processed/
 data/external/
-*.csv
 *.xlsx
 *.parquet
 *.h5
@@ -150,7 +149,7 @@ data/external/
 !data/external/.gitkeep
 
 # Models
-models/
+models/**
 *.pkl
 *.joblib
 *.h5
@@ -179,7 +178,6 @@ uv.lock
 .dvc/cache/
 .dvc/tmp/
 .dvc/config.local
-*.dvc
 
 # MLflow
 mlruns/
@@ -197,3 +195,6 @@ bandit-report.json
 *.tmp
 *.bak
 *.swp
+
+mlflow.db
+clearml.conf
