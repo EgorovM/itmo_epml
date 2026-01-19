@@ -12,6 +12,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.model_selection import train_test_split
 
+from src.utils.mlflow_utils import mlflow_run, setup_mlflow
+
 
 def load_params():
     """Load training parameters from params.yaml."""
@@ -45,11 +47,9 @@ def train_model():
         random_state=train_params["random_state"],
     )
 
-    # Set up MLflow
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    mlflow.set_experiment("iris_classification")
+    setup_mlflow(tracking_uri="sqlite:///mlflow.db", experiment_name="iris_classification")
 
-    with mlflow.start_run():
+    with mlflow_run(run_name="train_random_forest"):
         # Log parameters
         mlflow.log_params(train_params)
 

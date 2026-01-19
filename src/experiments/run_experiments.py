@@ -21,7 +21,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-from src.utils.mlflow_utils import setup_mlflow
+from src.utils.mlflow_utils import mlflow_run, setup_mlflow
 
 
 def load_data():
@@ -48,9 +48,8 @@ def train_and_log(
     params: dict,
 ):
     """Train model and log to MLflow."""
-    with mlflow.start_run(run_name=algorithm_name):
-        # Log algorithm name as both tag and param
-        mlflow.set_tag("algorithm", algorithm_name)
+    with mlflow_run(run_name=algorithm_name, tags={"algorithm": algorithm_name}):
+        # Log algorithm name as param
         mlflow.log_param("algorithm", algorithm_name)
 
         # Log parameters
